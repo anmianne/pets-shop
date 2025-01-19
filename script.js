@@ -84,3 +84,53 @@ const items = [
     img: "./img/12.jpeg",
   },
 ];
+
+
+
+const cardTemplate = document.querySelector('#item-template');
+const shopItemsContainer = document.querySelector('#shop-items');
+const button = document.querySelector('#search-btn');
+const searchInput = document.querySelector('#search-input');
+const nothingFound = document.querySelector('#nothing-found');
+
+
+items.forEach(function (item) {
+  const cardItem = cardTemplate.content.cloneNode(true);
+
+  cardItem.querySelector('img').src = item.img;
+  cardItem.querySelector('.tags').textContent = item.tags; // как добавить еще и стили с классом tag?
+  cardItem.querySelector('h1').textContent = item.title;
+  cardItem.querySelector('p').textContent = item.description;
+  cardItem.querySelector('.price').textContent = `${item.price}₽`;
+
+  shopItemsContainer.append(cardItem);
+});
+
+button.addEventListener("click", function () {
+  shopItemsContainer.innerHTML = "";
+  nothingFound.innerHTML = "";
+
+  const searchText = searchInput.value.trim().toLowerCase();
+
+  const filteredItems = items.filter(item => {
+    return item.title.toLowerCase().includes(searchText);
+  })
+
+
+  if (filteredItems.length > 0) {
+    filteredItems.forEach(item => {
+      const cardItem = cardTemplate.content.cloneNode(true);
+      cardItem.querySelector('img').src = item.img;
+      cardItem.querySelector('.tags').textContent = item.tags;
+      cardItem.querySelector('h1').textContent = item.title;
+      cardItem.querySelector('p').textContent = item.description;
+      cardItem.querySelector('.price').textContent = `${item.price}₽`;
+
+      shopItemsContainer.append(cardItem);
+    });
+  } else {
+    nothingFound.textContent = "Ничего не найдено";
+  }
+});
+
+

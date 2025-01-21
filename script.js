@@ -93,18 +93,33 @@ const button = document.querySelector('#search-btn');
 const searchInput = document.querySelector('#search-input');
 const nothingFound = document.querySelector('#nothing-found');
 
-
-items.forEach(function (item) {
+function makeCard(item) {
   const cardItem = cardTemplate.content.cloneNode(true);
 
   cardItem.querySelector('img').src = item.img;
-  cardItem.querySelector('.tags').textContent = item.tags; // как добавить еще и стили с классом tag?
   cardItem.querySelector('h1').textContent = item.title;
   cardItem.querySelector('p').textContent = item.description;
   cardItem.querySelector('.price').textContent = `${item.price}₽`;
 
-  shopItemsContainer.append(cardItem);
-});
+  const tagsContainer = cardItem.querySelector('.tags');
+  item.tags.forEach(function (item) {
+    const tagElem = document.createElement('span');
+    tagElem.classList.add('tag');
+    tagElem.textContent = item;
+    tagsContainer.append(tagElem);
+  })
+  return cardItem;
+}
+
+function addCardsIntoContainer(array) {
+
+  array.forEach(function (item) {
+    const card = makeCard(item);
+    shopItemsContainer.append(card);
+  });
+}
+
+addCardsIntoContainer(items);
 
 button.addEventListener("click", function () {
   shopItemsContainer.innerHTML = "";
@@ -118,16 +133,7 @@ button.addEventListener("click", function () {
 
 
   if (filteredItems.length > 0) {
-    filteredItems.forEach(item => {
-      const cardItem = cardTemplate.content.cloneNode(true);
-      cardItem.querySelector('img').src = item.img;
-      cardItem.querySelector('.tags').textContent = item.tags;
-      cardItem.querySelector('h1').textContent = item.title;
-      cardItem.querySelector('p').textContent = item.description;
-      cardItem.querySelector('.price').textContent = `${item.price}₽`;
-
-      shopItemsContainer.append(cardItem);
-    });
+    addCardsIntoContainer(filteredItems);
   } else {
     nothingFound.textContent = "Ничего не найдено";
   }
